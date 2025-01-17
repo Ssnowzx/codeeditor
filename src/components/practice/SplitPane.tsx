@@ -7,6 +7,13 @@ import {
 import CodeEditor from "./CodeEditor";
 import GamePreview from "./GamePreview";
 
+interface ExerciseDescription {
+  title: string;
+  description: string;
+  template: string;
+  solution: string;
+}
+
 interface SplitPaneProps {
   code?: string;
   onCodeChange?: (code: string) => void;
@@ -18,6 +25,7 @@ interface SplitPaneProps {
   gameState?: any;
   onMove?: (index: number) => void;
   showGame?: boolean;
+  exerciseDescription?: ExerciseDescription;
 }
 
 const SplitPane = ({
@@ -31,6 +39,7 @@ const SplitPane = ({
   gameState,
   onMove,
   showGame = true,
+  exerciseDescription,
 }: SplitPaneProps) => {
   return (
     <div className="flex-1 overflow-hidden">
@@ -43,6 +52,7 @@ const SplitPane = ({
             onReset={onReset}
             compilationError={compilationError}
             isCompiling={isCompiling}
+            exerciseDescription={exerciseDescription}
           />
         </ResizablePanel>
 
@@ -57,6 +67,7 @@ const SplitPane = ({
             onMove={onMove}
             compilationError={compilationError}
             showGame={showGame}
+            exerciseDescription={exerciseDescription}
           />
         </ResizablePanel>
       </ResizablePanelGroup>

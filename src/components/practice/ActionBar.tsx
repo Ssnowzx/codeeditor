@@ -2,20 +2,31 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Play, RotateCcw, Code, TestTube } from "lucide-react";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+type Difficulty = "easy" | "medium" | "hard";
+
 interface ActionBarProps {
   onRun?: () => void;
   onReset?: () => void;
   onViewSolution?: () => void;
   onRunTests?: () => void;
+  onDifficultyChange?: (difficulty: Difficulty) => void;
   isCompiling?: boolean;
   isRunningTests?: boolean;
   showSolution?: boolean;
+  difficulty?: Difficulty;
 }
 
 const ActionBar = ({
@@ -23,9 +34,11 @@ const ActionBar = ({
   onReset = () => {},
   onViewSolution = () => {},
   onRunTests = () => {},
+  onDifficultyChange = () => {},
   isCompiling = false,
   isRunningTests = false,
   showSolution = false,
+  difficulty = "easy",
 }: ActionBarProps) => {
   return (
     <div className="flex items-center justify-between px-4 py-2 border-b bg-background h-[60px]">
@@ -63,6 +76,20 @@ const ActionBar = ({
             <TooltipContent>Reset code to initial template</TooltipContent>
           </Tooltip>
         </TooltipProvider>
+
+        <Select
+          value={difficulty}
+          onValueChange={(value: Difficulty) => onDifficultyChange(value)}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select Difficulty" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="easy">Easy</SelectItem>
+            <SelectItem value="medium">Medium</SelectItem>
+            <SelectItem value="hard">Hard</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="flex items-center space-x-2">

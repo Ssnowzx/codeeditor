@@ -3,6 +3,13 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Play, RotateCcw } from "lucide-react";
 
+interface ExerciseDescription {
+  title: string;
+  description: string;
+  template: string;
+  solution: string;
+}
+
 interface CodeEditorProps {
   code?: string;
   onChange?: (code: string) => void;
@@ -10,6 +17,7 @@ interface CodeEditorProps {
   onReset?: () => void;
   compilationError?: string;
   isCompiling?: boolean;
+  exerciseDescription?: ExerciseDescription;
 }
 
 const CodeEditor = ({
@@ -19,11 +27,14 @@ const CodeEditor = ({
   onReset = () => {},
   compilationError = "",
   isCompiling = false,
+  exerciseDescription,
 }: CodeEditorProps) => {
   return (
     <div className="flex flex-col h-full bg-background p-4">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">C Code Editor</h2>
+        <h2 className="text-lg font-semibold">
+          {exerciseDescription?.title || "C Code Editor"}
+        </h2>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={onReset}>
             <RotateCcw className="w-4 h-4 mr-2" />
@@ -35,6 +46,14 @@ const CodeEditor = ({
           </Button>
         </div>
       </div>
+
+      {exerciseDescription && (
+        <Card className="mb-4 p-4 bg-muted/50">
+          <pre className="whitespace-pre-wrap text-sm">
+            {exerciseDescription.description}
+          </pre>
+        </Card>
+      )}
 
       <Card className="flex-grow flex flex-col">
         <div className="flex-grow p-4">
