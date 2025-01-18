@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Play, RefreshCw, AlertTriangle, Terminal } from "lucide-react";
+import { RefreshCw, AlertTriangle, Terminal } from "lucide-react";
 import GameBoard from "./GameBoard";
 
 interface ExerciseDescription {
@@ -39,13 +39,51 @@ const GamePreview = ({
   exerciseDescription,
   codeIsValid = false,
 }: GamePreviewProps) => {
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState<string[]>([]);
+  const [waitingForInput, setWaitingForInput] = useState(false);
+  const [step, setStep] = useState(0);
+
+  const handleInput = (value: string) => {
+    if (!waitingForInput) return;
+
+    if (exerciseDescription?.title === "Soma de Dois Números") {
+      if (step === 0) {
+        setOutput([`Digite o primeiro número: ${value}`]);
+        setStep(1);
+        setInput("");
+      } else if (step === 1) {
+        const num1 = parseInt(output[0].split(": ")[1]);
+        const num2 = parseInt(value);
+        setOutput([
+          `Digite o primeiro número: ${num1}`,
+          `Digite o segundo número: ${num2}`,
+          `A soma de ${num1} e ${num2} é: ${num1 + num2}`,
+        ]);
+        setWaitingForInput(false);
+      }
+    } else if (
+      exerciseDescription?.title === "Contador de Vogais e Consoantes"
+    ) {
+      const vogais = (value.match(/[aeiou]/gi) || []).length;
+      const consoantes = (value.match(/[bcdfghjklmnpqrstvwxyz]/gi) || [])
+        .length;
+      setOutput([
+        `Digite uma string: ${value}`,
+        `Vogais: ${vogais}`,
+        `Consoantes: ${consoantes}`,
+      ]);
+      setWaitingForInput(false);
+    }
+  };
+
   const renderPreview = () => {
     if (compilationError) {
       return (
         <div className="text-center p-6">
           <AlertTriangle className="w-12 h-12 text-destructive mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-destructive mb-2">
-            Compilation Error
+            Erro de Compilação
           </h3>
           <pre className="text-sm text-destructive/80 whitespace-pre-wrap">
             {compilationError}
@@ -58,12 +96,12 @@ const GamePreview = ({
       return (
         <div className="text-center p-6">
           <h3 className="text-lg font-semibold mb-2">
-            {isCompiling ? "Compiling..." : "Running..."}
+            {isCompiling ? "Compilando..." : "Executando..."}
           </h3>
           <p className="text-muted-foreground">
             {isCompiling
-              ? "Checking your code..."
-              : "Executing your program..."}
+              ? "Verificando seu código..."
+              : "Executando seu programa..."}
           </p>
         </div>
       );
@@ -73,15 +111,14 @@ const GamePreview = ({
       return (
         <div className="text-center p-6">
           <Terminal className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-semibold mb-2">Program Output</h3>
+          <h3 className="text-lg font-semibold mb-2">Saída do Programa</h3>
           <p className="text-muted-foreground">
-            Write your code and click Run to see the output
+            Escreva seu código e clique em Executar para ver a saída
           </p>
         </div>
       );
     }
 
-    // Show game board for hard mode
     if (showGame) {
       return (
         <GameBoard
@@ -94,39 +131,59 @@ const GamePreview = ({
       );
     }
 
-    // Show terminal output for easy/medium modes
     return (
       <div className="text-center p-6">
         <Terminal className="w-12 h-12 text-green-500 mx-auto mb-4" />
         <h3 className="text-lg font-semibold mb-2 text-green-500">
-          Program Executed Successfully!
+          Programa em Execução
         </h3>
         <div className="bg-muted p-4 rounded-lg text-left font-mono">
-          {exerciseDescription?.title === "Sum of Two Numbers" ? (
-            <>
-              Enter first number: 5
-              <br />
-              Enter second number: 7
-              <br />
-              The sum of 5 and 7 is: 12
-            </>
-          ) : exerciseDescription?.title === "Prime Number Checker" ? (
-            <>
-              Enter a positive integer: 13
-              <br />
-              13 is a prime number.
-            </>
-          ) : null}
+          {output.map((line, i) => (
+            <div key={i}>{line}</div>
+          ))}
+          {waitingForInput && (
+            <div className="flex items-center gap-2">
+              <span>
+                {exerciseDescription?.title ===
+                "Contador de Vogais e Consoantes"
+                  ? "Digite uma string:"
+                  : step === 0
+                    ? "Digite o primeiro número:"
+                    : "Digite o segundo número:"}
+              </span>
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleInput(input);
+                  }
+                }}
+                className="bg-background border px-2 py-1 rounded w-40"
+                autoFocus
+              />
+            </div>
+          )}
         </div>
       </div>
     );
   };
 
+  React.useEffect(() => {
+    if (codeIsValid && !showGame) {
+      setOutput([]);
+      setStep(0);
+      setWaitingForInput(true);
+      setInput("");
+    }
+  }, [codeIsValid, showGame]);
+
   return (
     <div className="h-full flex flex-col bg-background p-4">
       <Card className="flex-1 flex flex-col gap-4 p-6">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold">Preview</h2>
+          <h2 className="text-2xl font-bold">Visualização</h2>
           {showGame && codeIsValid && (
             <div className="flex gap-2">
               <Button
@@ -136,7 +193,7 @@ const GamePreview = ({
                 disabled={isCompiling || isRunning}
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
-                Reset Game
+                Reiniciar Jogo
               </Button>
             </div>
           )}
@@ -147,35 +204,39 @@ const GamePreview = ({
         </div>
 
         <div className="mt-4">
-          <h3 className="font-semibold mb-2">Output:</h3>
+          <h3 className="font-semibold mb-2">Saída:</h3>
           <div className="bg-muted p-4 rounded-lg h-32 overflow-y-auto font-mono text-sm">
             {isCompiling ? (
-              <p className="text-yellow-500">Compiling code...</p>
+              <p className="text-yellow-500">Compilando código...</p>
             ) : isRunning ? (
-              <p className="text-blue-500">Running program...</p>
+              <p className="text-blue-500">Executando programa...</p>
             ) : compilationError ? (
               <p className="text-destructive">
-                Compilation failed. Fix the errors and try again.
+                Compilação falhou. Corrija os erros e tente novamente.
               </p>
             ) : codeIsValid ? (
               showGame ? (
                 gameState.status === "won" ? (
                   <p className="text-green-500">
-                    Player {gameState.winner} wins!
+                    Jogador {gameState.winner} venceu!
                   </p>
                 ) : gameState.status === "draw" ? (
-                  <p className="text-yellow-500">Game ended in a draw!</p>
+                  <p className="text-yellow-500">Jogo terminou em empate!</p>
                 ) : (
                   <p className="text-muted-foreground">
-                    {gameState.currentPlayer}'s turn
+                    Vez do jogador {gameState.currentPlayer}
                   </p>
                 )
               ) : (
-                <p className="text-green-500">Program executed successfully!</p>
+                <p className="text-green-500">
+                  {output.length > 0
+                    ? "Programa em execução"
+                    : "Aguardando entrada do usuário..."}
+                </p>
               )
             ) : (
               <p className="text-muted-foreground">
-                Program output will appear here
+                A saída do programa aparecerá aqui
               </p>
             )}
           </div>

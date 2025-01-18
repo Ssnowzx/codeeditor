@@ -1,21 +1,12 @@
 import { Suspense } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
-import Home from "./components/home";
+import { Routes, Route, Navigate } from "react-router-dom";
 import PracticePage from "./pages/practice";
 
 function App() {
-  const location = useLocation();
-  const isTempoStoryboard = location.pathname.includes("/tempobook/dynamic/");
-
-  // If it's a Tempo storyboard route, render the practice page directly
-  if (isTempoStoryboard) {
-    return <PracticePage />;
-  }
-
   return (
     <Suspense fallback={<p>Loading...</p>}>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Navigate to="/practice" replace />} />
         <Route path="/practice" element={<PracticePage />} />
       </Routes>
     </Suspense>

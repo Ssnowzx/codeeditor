@@ -26,6 +26,7 @@ interface SplitPaneProps {
   onMove?: (index: number) => void;
   showGame?: boolean;
   exerciseDescription?: ExerciseDescription;
+  codeIsValid?: boolean;
 }
 
 const SplitPane = ({
@@ -40,6 +41,7 @@ const SplitPane = ({
   onMove,
   showGame = true,
   exerciseDescription,
+  codeIsValid = false,
 }: SplitPaneProps) => {
   return (
     <div className="flex-1 overflow-hidden">
@@ -68,6 +70,7 @@ const SplitPane = ({
             compilationError={compilationError}
             showGame={showGame}
             exerciseDescription={exerciseDescription}
+            codeIsValid={codeIsValid}
           />
         </ResizablePanel>
       </ResizablePanelGroup>

@@ -6,25 +6,22 @@ type Difficulty = "easy" | "medium" | "hard";
 
 const exerciseDescriptions = {
   easy: {
-    title: "Sum of Two Numbers",
-    description: `Create a C program that asks the user for two integers, calculates their sum, and displays the result.
+    title: "Soma de Dois Números",
+    description: `Crie um programa em C que solicite dois números inteiros, calcule sua soma e exiba o resultado.
 
-Requirements:
-- Program should prompt for two integers
-- Calculate the sum of the numbers
-- Display the result
+Requisitos:
+- O programa deve solicitar dois números inteiros
+- Calcular a soma dos números
+- Exibir o resultado
 
-Example Output:
-Enter first number: 5
-Enter second number: 7
-The sum of 5 and 7 is: 12`,
+Exemplo de Saída:
+Digite o primeiro número: 5
+Digite o segundo número: 7
+A soma de 5 e 7 é: 12`,
     template: `#include <stdio.h>
 
 int main() {
-    int num1, num2, sum;
-
-    // TODO: Implement the program here
-
+    // Implemente sua solução aqui
     return 0;
 }
 `,
@@ -33,90 +30,118 @@ int main() {
 int main() {
     int num1, num2, sum;
 
-    printf("Enter first number: ");
+    printf("Digite o primeiro número: ");
     scanf("%d", &num1);
 
-    printf("Enter second number: ");
+    printf("Digite o segundo número: ");
     scanf("%d", &num2);
 
     sum = num1 + num2;
-    printf("The sum of %d and %d is: %d\n", num1, num2, sum);
+    printf("A soma de %d e %d é: %d\n", num1, num2, sum);
 
     return 0;
 }
 `,
   },
   medium: {
-    title: "Prime Number Checker",
-    description: `Create a C program that checks if a given number is prime. A prime number is only divisible by 1 and itself.
+    title: "Contador de Vogais e Consoantes",
+    description: `Você vai criar um programa em C que conta quantas vogais e consoantes existem em uma frase ou palavra digitada pelo usuário. O programa deve ser capaz de:
 
-Requirements:
-- Program should prompt for a positive integer
-- Check if the number is prime
-- Display whether the number is prime or not
+- Receber uma string (uma frase ou palavra) como entrada
+- Contar quantas vogais e consoantes existem nessa string
+- Exibir o resultado na tela
 
-Example Output:
-Enter a positive integer: 13
-13 is a prime number.`,
+Exemplo de Saída:
+Digite uma string: Hello World
+Vogais: 3
+Consoantes: 7`,
     template: `#include <stdio.h>
+#include <ctype.h>
+
+void contarVogaisConsoantes(const char *str, int *vogais, int *consoantes) {
+    // Implemente sua solução aqui
+}
 
 int main() {
-    int num, isPrime = 1;
-
-    // TODO: Implement the program here
-
+    char str[100];
+    int vogais = 0, consoantes = 0;
+    
+    // Implemente sua solução aqui
     return 0;
 }
 `,
     solution: `#include <stdio.h>
+#include <ctype.h>
 
-int main() {
-    int num, i, isPrime = 1;
-
-    printf("Enter a positive integer: ");
-    scanf("%d", &num);
-
-    if (num <= 1) {
-        isPrime = 0;
-    } else {
-        for (i = 2; i <= num / 2; i++) {
-            if (num % i == 0) {
-                isPrime = 0;
-                break;
-            }
+void contarVogaisConsoantes(const char *str, int *vogais, int *consoantes) {
+    *vogais = 0;
+    *consoantes = 0;
+    
+    for(int i = 0; str[i] != '\0'; i++) {
+        char c = tolower(str[i]);
+        
+        if(c >= 'a' && c <= 'z') {
+            if(c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u')
+                (*vogais)++;
+            else
+                (*consoantes)++;
         }
     }
+}
 
-    if (isPrime) {
-        printf("%d is a prime number.\n", num);
-    } else {
-        printf("%d is not a prime number.\n", num);
-    }
+int main() {
+    char str[100];
+    int vogais = 0, consoantes = 0;
+    
+    printf("Digite uma string: ");
+    fgets(str, sizeof(str), stdin);
+    
+    contarVogaisConsoantes(str, &vogais, &consoantes);
+    
+    printf("Vogais: %d\n", vogais);
+    printf("Consoantes: %d\n", consoantes);
 
     return 0;
 }
 `,
   },
   hard: {
-    title: "Tic-Tac-Toe Game Implementation",
-    description: `Create a C program that implements a Tic-Tac-Toe game with the following features:
+    title: "Implementação do Jogo da Velha",
+    description: `Crie um programa em C que implementa um jogo da velha com as seguintes características:
 
-Requirements:
-- Implement a 3x3 game board using a char array
-- Track current player (X or O)
-- Implement functions for:
-  * makeMove: Handle player moves
-  * checkWin: Check for winning conditions
-  * isBoardFull: Check for draw
-  * printBoard: Display the game board
+Requisitos:
+- Implementar um tabuleiro 3x3 usando um array de caracteres
+- Controlar o jogador atual (X ou O)
+- Implementar funções para:
+  * makeMove: Gerenciar jogadas dos jogadores
+  * checkWin: Verificar condições de vitória
+  * isBoardFull: Verificar empate
+  * printBoard: Exibir o tabuleiro
 
-The game should allow players to take turns and detect wins or draws.`,
+O jogo deve permitir que os jogadores se alternem e detectar vitórias ou empates.`,
     template: `#include <stdio.h>
 
-// TODO: Implement the required variables and functions
+void printBoard() {
+    // Implemente sua solução aqui
+}
+
+int checkWin() {
+    // Implemente sua solução aqui
+    return 0;
+}
+
+int isBoardFull() {
+    // Implemente sua solução aqui
+    return 0;
+}
+
+int makeMove(int position) {
+    // Implemente sua solução aqui
+    return 0;
+}
 
 int main() {
-    // TODO: Implement the game logic
+    // Implemente sua solução aqui
     return 0;
 }
 `,
@@ -200,6 +225,13 @@ const PracticePage = () => {
     setCompilationError("");
     setFailedAttempts(0);
     setCodeIsValid(false);
+    setGameState({
+      board: Array(9).fill(null),
+      currentPlayer: "X",
+      status: "playing",
+      winner: null,
+      winningCells: [],
+    });
   };
 
   const validateCode = (code: string) => {
@@ -211,9 +243,10 @@ const PracticePage = () => {
       );
     } else if (difficulty === "medium") {
       return (
-        code.includes("isPrime") &&
-        code.includes("for") &&
-        code.includes("scanf")
+        code.includes("contarVogaisConsoantes") &&
+        code.includes("fgets") &&
+        code.includes("vogais") &&
+        code.includes("consoantes")
       );
     } else {
       const requiredFunctions = [
@@ -226,16 +259,16 @@ const PracticePage = () => {
 
       for (const func of requiredFunctions) {
         if (!code.includes(func)) {
-          errors.push(`Error: Missing required function '${func}'`);
+          errors.push(`Erro: Função necessária '${func}' não encontrada`);
         }
       }
 
       if (!code.includes("char board[9]")) {
-        errors.push("Error: Missing board array declaration");
+        errors.push("Erro: Declaração do array do tabuleiro não encontrada");
       }
 
       if (!code.includes("char currentPlayer")) {
-        errors.push("Error: Missing currentPlayer variable");
+        errors.push("Erro: Variável currentPlayer não encontrada");
       }
 
       return errors;
@@ -245,7 +278,6 @@ const PracticePage = () => {
   const handleRun = () => {
     setIsCompiling(true);
     setCompilationError("");
-    setCodeIsValid(false);
 
     const validation = validateCode(code);
 
@@ -256,18 +288,23 @@ const PracticePage = () => {
         if (Array.isArray(validation) && validation.length > 0) {
           setCompilationError(validation.join("\n"));
           setFailedAttempts((prev) => prev + 1);
+          setCodeIsValid(false);
           return;
         }
-      } else if (!validation) {
-        setCompilationError(
-          "Your solution is incomplete. Check the requirements and try again.",
-        );
-        setFailedAttempts((prev) => prev + 1);
-        return;
+        setCodeIsValid(true);
+      } else {
+        if (!validation) {
+          setCompilationError(
+            "Sua solução está incompleta. Verifique os requisitos e tente novamente.",
+          );
+          setFailedAttempts((prev) => prev + 1);
+          setCodeIsValid(false);
+          return;
+        }
+        setCodeIsValid(true);
       }
 
       setIsRunning(true);
-      setCodeIsValid(true);
 
       if (difficulty === "hard") {
         setGameState({
